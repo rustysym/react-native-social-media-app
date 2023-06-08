@@ -7,20 +7,14 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {UserContext} from '../context/UserContext';
 import {AuthContext} from '../context/AuthContext';
-import {
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from 'firebase/firestore';
-import {firestore} from '../config/FirebaseConfig';
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ParamListBase } from '@react-navigation/native';
+import { PostContext } from '../context/PostContext';
+
 /*type RootStackParamList = {
   UserScreen: { userId: string };
 };
@@ -30,48 +24,10 @@ type Props = NativeStackScreenProps<RootStackParamList,'UserScreen'>;*/
 const UserScreen = ({route}: any) => {
   const {signOut} = useContext(UserContext);
   const {user} = useContext(AuthContext);
-  const [posts, setPosts] = useState<Posts[]>([]);
-  const [deleted, setDeleted] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const {posts} = useContext(PostContext);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const fetchPost = React.useCallback(async () => {
-    try {
-      setLoading(true);
-      const list: any = [];
-      const q = query(
-        collection(firestore, 'posts'),
-        where('userId', '==', route.params ? route.params.userId : user.uid),
-        orderBy('postTime', 'desc'),
-      );
-      onSnapshot(q, snapshot => {
-        snapshot.forEach(async doc => {
-          const {post, postImage, postTime, userId} = doc.data();
-          await Promise.all(
-            list.push({
-              key: doc.id,
-              userId: userId,
-              userName: user?.displayName,
-              userImage:
-                'https://blog.readyplayer.me/content/images/2021/04/IMG_0689.PNG',
-              postTime: postTime,
-              post: post,
-              postImage: postImage,
-              liked: false,
-              likes: 0,
-              comments: 0,
-            }),
-          );
-        });
-        setPosts(list);
-        setLoading(false);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [posts]);
-  useEffect(() => {
-    fetchPost();
-  }, []);
+  
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <ScrollView
@@ -84,7 +40,7 @@ const UserScreen = ({route}: any) => {
             uri: 'https://blog.readyplayer.me/content/images/2021/04/IMG_0689.PNG',
           }}
         />
-        <Text style={styles.userName}>Emre Kalfa</Text>
+        <Text style={styles.userName}>{user?.displayName}</Text>
         {/* <Text>{route.params ? route.params.userId : user.uid}</Text> */}
         <Text style={styles.aboutUser}>@emreklf</Text>
         <View style={styles.userBtnWrapper}>
@@ -112,7 +68,7 @@ const UserScreen = ({route}: any) => {
         </View>
         <View style={styles.userInfoWrapper}>
           <View style={styles.userInfoItem}>
-            <Text style={styles.userInfoTitle}>{posts.length}</Text>
+            <Text style={styles.userInfoTitle}>{posts?.length > 0 ? posts?.length : 0}</Text>
             <Text style={styles.userInfoSubTitle}>Posts</Text>
           </View>
           <View style={styles.userInfoItem}>
@@ -125,13 +81,13 @@ const UserScreen = ({route}: any) => {
           </View>
         </View>
         <View style={styles.postContainer}>
-          {posts.map((item, idx) => (
-            <View key={item.key}>
+          {posts && posts.map((item:Posts) => (
+            <View key={item?.id}>
               <TouchableOpacity>
                 <View>
-                  {item.postImage !== null ? (
+                  {item?.postImage !== null ? (
                     <Image
-                      source={{uri: `${item.postImage}`}}
+                      source={{uri: `${item?.postImage}`}}
                       style={styles.postImages}
                     />
                   ) : null}
@@ -152,6 +108,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingVertical: '20%',
+    
   },
   userImg: {
     height: 125,
@@ -215,7 +172,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingLeft:4,
     width: '90%',
-    gap:8
+    gap:8,
+    paddingBottom:'22%',
   },
   postImages: {
     height: 100,
