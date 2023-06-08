@@ -1,0 +1,53 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/GeneralSans-Bold.otf",
+      "sha1": "7c66f9cd8c3240fde8504746b849217901adfea1"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-BoldItalic.otf",
+      "sha1": "d3885be3b71de2af7665882d9189ada24f0b3e29"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-Extralight.otf",
+      "sha1": "11ed92f24bd64ea839cca8da3d9a8fde3158b05a"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-ExtralightItalic.otf",
+      "sha1": "446ec19fd95e2c56ca256f35447c60250568d551"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-Italic.otf",
+      "sha1": "7042c5ffc92d2f1626a4fdb88a07156403a51ecc"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-Light.otf",
+      "sha1": "d86ef28d2bd7c8bc3f37663738e291370da37d27"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-LightItalic.otf",
+      "sha1": "437d21869e0b92ae38814d6661e5c8bf5363f802"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-Medium.otf",
+      "sha1": "90d6eedb55a4df589dcdb4038aa2feecb8c4ef3a"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-MediumItalic.otf",
+      "sha1": "d14bb50706609c3ee4a4a156efb32c42399d7f7b"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-Regular.otf",
+      "sha1": "b03745ee5c7610ffcd8b64a4a4ccf28e25ed9759"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-Semibold.otf",
+      "sha1": "24d398d7f5e7ebc4ba9488552455b79d38e17221"
+    },
+    {
+      "path": "assets/fonts/GeneralSans-SemiboldItalic.otf",
+      "sha1": "4e8eeaae30379e18bca5ecbb09156ace52e0af3a"
+    }
+  ]
+}
