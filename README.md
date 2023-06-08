@@ -1,9 +1,9 @@
 # React Native Social Media App
 
 <div style="margin:10px;">
-<img src="https://github.com/rustysym/react-native-social-media-app/assets/92743495/a19b597b-f56f-476a-b516-1b529b8f82b1" alt="socialapp" style="height:425px; width:200px;">
-<img src="https://github.com/rustysym/react-native-social-media-app/assets/92743495/99cc3d7a-bec5-415f-b894-c9b8c494e8b3" alt="socialapp" style="height:425px; width:200px;">
-<img src="https://github.com/rustysym/react-native-social-media-app/assets/92743495/a1a16800-3941-41ea-adca-52e25e29e278" alt="socialapp" style="height:425px; width:200px;">
+<img src="https://github.com/rustysym/react-native-social-media-app/assets/92743495/a1a16800-3941-41ea-adca-52e25e29e278" alt="socialapp1" style="height:425px; width:200px;">
+<img src="https://github.com/rustysym/react-native-social-media-app/assets/92743495/99cc3d7a-bec5-415f-b894-c9b8c494e8b3" alt="socialapp2" style="height:425px; width:200px;">
+<img src="https://github.com/rustysym/react-native-social-media-app/assets/92743495/a19b597b-f56f-476a-b516-1b529b8f82b1" alt="socialapp3" style="height:425px; width:200px;">
 </div>
 
 
