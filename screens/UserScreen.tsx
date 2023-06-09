@@ -7,7 +7,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {UserContext} from '../context/UserContext';
 import {AuthContext} from '../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
@@ -24,9 +24,12 @@ type Props = NativeStackScreenProps<RootStackParamList,'UserScreen'>;*/
 const UserScreen = ({route}: any) => {
   const {signOut} = useContext(UserContext);
   const {user} = useContext(AuthContext);
-  const {posts} = useContext(PostContext);
+  const {userPosts,fetchUserPosts} = useContext(PostContext);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  
+
+  useEffect(()=>{
+    fetchUserPosts()
+  },[])
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
@@ -37,7 +40,7 @@ const UserScreen = ({route}: any) => {
         <Image
           style={styles.userImg}
           source={{
-            uri: 'https://blog.readyplayer.me/content/images/2021/04/IMG_0689.PNG',
+            uri: 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
           }}
         />
         <Text style={styles.userName}>{user?.displayName}</Text>
@@ -68,7 +71,7 @@ const UserScreen = ({route}: any) => {
         </View>
         <View style={styles.userInfoWrapper}>
           <View style={styles.userInfoItem}>
-            <Text style={styles.userInfoTitle}>{posts?.length > 0 ? posts?.length : 0}</Text>
+            <Text style={styles.userInfoTitle}>{userPosts?.length > 0 ? userPosts?.length : 0}</Text>
             <Text style={styles.userInfoSubTitle}>Posts</Text>
           </View>
           <View style={styles.userInfoItem}>
@@ -81,7 +84,7 @@ const UserScreen = ({route}: any) => {
           </View>
         </View>
         <View style={styles.postContainer}>
-          {posts && posts.map((item:Posts) => (
+          {userPosts && userPosts.map((item:Posts) => (
             <View key={item?.id}>
               <TouchableOpacity>
                 <View>

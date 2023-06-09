@@ -3,7 +3,7 @@ import {database, firestore, storage} from '../config/FirebaseConfig';
 import {PostContext} from './PostContext';
 
 import {AuthContext} from './AuthContext';
-import { collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { deleteObject, getDownloadURL, ref } from 'firebase/storage';
 import { Alert, Text, View } from 'react-native';
 
@@ -16,6 +16,7 @@ interface Types {
 }
 export const PostProvider: React.FC<Types> = ({children}) => {
   const [posts, setPosts] = useState<Posts[]>();
+  const [userPosts, setUserPosts] = useState<Posts[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [deleted, setDeleted] = useState<boolean>(false);
@@ -68,6 +69,39 @@ export const PostProvider: React.FC<Types> = ({children}) => {
     }
     
   };
+  const fetchUserPosts = async () => {
+    setLoading(true);
+    try {
+      const q = query(
+        collection(firestore, 'posts'),
+        where('userId', '==', user.uid),
+        orderBy('postTime', 'desc'),
+      );
+       onSnapshot(q, snapshot => {
+        const list: any = [];
+        snapshot.forEach(async doc => {
+          const {post, postImage, postTime, userId} = doc.data();
+        await Promise.all(list.push({
+            id: doc.id,
+            userId: userId,
+            userName: user?.displayName,
+            postTime: postTime,
+            post: post,
+            postImage: postImage,
+            liked: false,
+            likes: 0,
+            comments: 0,
+          }))
+          setUserPosts(list);
+          setLoading(false)
+        });
+      });
+      
+    } catch (error) {
+      console.log(error);
+    }
+    
+  };
   const deletePost = async(postId: any):Promise<any> => {
     const colRef = collection(firestore, 'posts');
     const docRef = doc(colRef,`${postId}`)
@@ -102,7 +136,7 @@ export const PostProvider: React.FC<Types> = ({children}) => {
   })
  }
   return (
-    <PostContext.Provider value={{fetchPost,loading,setLoading,posts,deletePost,setIsOpen,isOpen,deleted,setDeleted}}>
+    <PostContext.Provider value={{fetchPost,loading,setLoading,posts,deletePost,setIsOpen,isOpen,deleted,setDeleted,fetchUserPosts,userPosts}}>
       {children}
     </PostContext.Provider>
   );
