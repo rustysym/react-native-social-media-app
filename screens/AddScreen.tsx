@@ -9,26 +9,30 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {PostContext} from '../context/PostContext';
 import ImagePicker from 'react-native-image-crop-picker';
 import {firestore, storage} from '../config/FirebaseConfig';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
-import {Timestamp, addDoc, collection, doc} from 'firebase/firestore';
+import {Timestamp, addDoc, collection} from 'firebase/firestore';
 import {AuthContext} from '../context/AuthContext';
+import {UserContext} from '../context/UserContext';
 
 interface Types {
   text?: string;
   image?: any | null;
 }
 const AddScreen: React.FC<Types> = () => {
-  const {writeUserData} = useContext(PostContext);
   const {user} = useContext(AuthContext);
+  const {getUser, setUserData, userData} = useContext(UserContext);
   const [text, setText] = useState('');
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   const pickImage = async () => {
     ImagePicker.openPicker({
       cropping: true,
@@ -64,7 +68,7 @@ const AddScreen: React.FC<Types> = () => {
       });
   };
   const uploadImage = async () => {
-    if(image === null){
+    if (image === null) {
       return null;
     }
     const uploadUri: any = image;
@@ -96,7 +100,10 @@ const AddScreen: React.FC<Types> = () => {
       <View style={styles.inputContainer}>
         <Image
           source={{
-            uri: 'https://blog.readyplayer.me/content/images/2021/04/IMG_0689.PNG',
+            uri: userData
+              ? userData.userImg ||
+                'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'
+              : 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
           }}
           style={styles.avatar}
         />

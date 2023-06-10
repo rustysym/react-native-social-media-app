@@ -11,25 +11,26 @@ import React, {useContext, useEffect} from 'react';
 import {UserContext} from '../context/UserContext';
 import {AuthContext} from '../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ParamListBase } from '@react-navigation/native';
-import { PostContext } from '../context/PostContext';
-
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {ParamListBase} from '@react-navigation/native';
+import {PostContext} from '../context/PostContext';
 /*type RootStackParamList = {
   UserScreen: { userId: string };
 };
 
 type Props = NativeStackScreenProps<RootStackParamList,'UserScreen'>;*/
 
-const UserScreen = ({route}: any) => {
-  const {signOut} = useContext(UserContext);
+const UserScreen = () => {
+  const {signOut, getUser, userData} = useContext(UserContext);
   const {user} = useContext(AuthContext);
-  const {userPosts,fetchUserPosts} = useContext(PostContext);
+  const {userPosts, fetchUserPost, setLoading} = useContext(PostContext);
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
-  useEffect(()=>{
-    fetchUserPosts()
-  },[])
+  useEffect(() => {
+    getUser();
+    fetchUserPost();
+    setLoading(false);
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
@@ -40,12 +41,20 @@ const UserScreen = ({route}: any) => {
         <Image
           style={styles.userImg}
           source={{
-            uri: 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
+            uri: userData
+              ? userData.userImg ||
+                'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'
+              : 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
           }}
         />
-        <Text style={styles.userName}>{user?.displayName}</Text>
+        <Text style={styles.userName}>
+          {userData ? userData.fName || 'Test' : 'Test'}{' '}
+          {userData ? userData.lName || 'User' : 'User'}
+        </Text>
         {/* <Text>{route.params ? route.params.userId : user.uid}</Text> */}
-        <Text style={styles.aboutUser}>@emreklf</Text>
+        <Text style={styles.aboutUser}>
+          {userData ? userData.about || 'No details added.' : ''}
+        </Text>
         <View style={styles.userBtnWrapper}>
           {!user ? (
             <>
@@ -58,7 +67,9 @@ const UserScreen = ({route}: any) => {
             </>
           ) : (
             <>
-              <TouchableOpacity style={styles.userBtn} onPress={()=>navigation.navigate('EditProfile')}>
+              <TouchableOpacity
+                style={styles.userBtn}
+                onPress={() => navigation.navigate('EditProfile')}>
                 <Text style={styles.userBtnTxt}>Edit</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -71,7 +82,9 @@ const UserScreen = ({route}: any) => {
         </View>
         <View style={styles.userInfoWrapper}>
           <View style={styles.userInfoItem}>
-            <Text style={styles.userInfoTitle}>{userPosts?.length > 0 ? userPosts?.length : 0}</Text>
+            <Text style={styles.userInfoTitle}>
+              {userPosts?.length > 0 ? userPosts?.length : 0}
+            </Text>
             <Text style={styles.userInfoSubTitle}>Posts</Text>
           </View>
           <View style={styles.userInfoItem}>
@@ -84,20 +97,21 @@ const UserScreen = ({route}: any) => {
           </View>
         </View>
         <View style={styles.postContainer}>
-          {userPosts && userPosts.map((item:Posts) => (
-            <View key={item?.id}>
-              <TouchableOpacity>
-                <View>
-                  {item?.postImage !== null ? (
-                    <Image
-                      source={{uri: `${item?.postImage}`}}
-                      style={styles.postImages}
-                    />
-                  ) : null}
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))}
+          {userPosts &&
+            userPosts.map((item: Posts) => (
+              <View key={item?.id}>
+                <TouchableOpacity>
+                  <View>
+                    {item?.postImage !== null ? (
+                      <Image
+                        source={{uri: `${item?.postImage}`}}
+                        style={styles.postImages}
+                      />
+                    ) : null}
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ))}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -111,7 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingVertical: '20%',
-    
   },
   userImg: {
     height: 125,
@@ -173,10 +186,10 @@ const styles = StyleSheet.create({
   postContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingLeft:4,
+    paddingLeft: 4,
     width: '90%',
-    gap:8,
-    paddingBottom:'22%',
+    gap: 8,
+    paddingBottom: '22%',
   },
   postImages: {
     height: 100,
