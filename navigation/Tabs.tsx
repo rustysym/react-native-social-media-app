@@ -80,7 +80,7 @@ export default function Tabs() {
         component={Notifications}
         options={{tabBarBadge: 3}}
       />
-      <Tab.Screen name="User" component={UserScreen} initialParams={{ userId: user?.uid }}/>
+      <Tab.Screen name="User" component={UserScreen}/>
     </Tab.Navigator>
     </PostProvider>
   );
