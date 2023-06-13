@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
     backgroundColor:'#1D1A20',
   },
   buttonText:{
-    fontFamily:'GeneralSans-Medium'
+    fontFamily:'GeneralSans-Medium',
+    color:'white'
   },
   signUpText:{
     color:'gray',

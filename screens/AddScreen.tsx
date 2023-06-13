@@ -62,6 +62,7 @@ const AddScreen: React.FC<Types> = () => {
       .then(() => {
         console.log('post added');
         setText('');
+        setImage(null)
       })
       .catch(e => {
         console.log(e);
@@ -108,7 +109,7 @@ const AddScreen: React.FC<Types> = () => {
           style={styles.avatar}
         />
         <TextInput
-          placeholder="Share your pets picture"
+          placeholder="Share your photos"
           placeholderTextColor={'lightgray'}
           onChange={() => text}
           onChangeText={setText}
