@@ -4,10 +4,16 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Platform,
   Dimensions,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {PostContext} from '../context/PostContext';
 import Entypo from 'react-native-vector-icons/Entypo';
 import moment from 'moment';
@@ -15,6 +21,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AuthContext} from '../context/AuthContext';
 import {collection, doc, getDoc} from 'firebase/firestore';
 import {firestore} from '../config/FirebaseConfig';
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 
 var width = Dimensions.get('window').width;
 
@@ -28,6 +35,28 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
 
   const [userData, setUserData] = useState<any>(null);
 
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ['1%', '50%'], []);
+
+  const handleSheet = (input: any) => {
+    if (!isOpen) {
+      bottomSheetRef.current?.expand();
+      setIsOpen(true);
+    } else {
+      bottomSheetRef.current?.close();
+      setIsOpen(false);
+    }
+    if (input) {
+      bottomSheetRef.current?.close();
+      setIsOpen(false);
+    }
+  };
+  const handleSheetChanges = useCallback((index: number) => {
+    if (index === 0) {
+      setIsOpen(false);
+    }
+  }, []);
+
   const getUser = async () => {
     const refCol = collection(firestore, 'users');
     const refDoc = doc(refCol, item.userId);
@@ -37,12 +66,34 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
       }
     });
   };
+
   useEffect(() => {
     getUser();
   }, []);
 
   return (
     <View key={item.index}>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={0}
+        enablePanDownToClose={true}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}>
+        <BottomSheetView style={styles.panel}>
+          {user.uid == item.userId ? (
+            <TouchableOpacity
+              style={styles.panelButton}
+              onPress={() => onDelete(item.id)}>
+              <Text style={[styles.panelButtonTitle]}>Delete Post</Text>
+            </TouchableOpacity>
+          ) : null}
+          <TouchableOpacity
+            style={styles.panelButton}
+            onPress={(input: any) => handleSheet(input)}>
+            <Text style={styles.panelButtonTitle}>Cancel</Text>
+          </TouchableOpacity>
+        </BottomSheetView>
+      </BottomSheet>
       <View style={styles.postTopContainer}>
         <Image
           source={{
@@ -69,39 +120,10 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
         <View style={styles.iconContainer}>
           <TouchableOpacity
             style={styles.iconStyle}
-            onPress={() => (!isOpen ? setIsOpen(true) : setIsOpen(false))}>
+            onPress={(input: any) => handleSheet(input)}>
             <Entypo name={'dots-three-horizontal'} color={'gray'} size={20} />
           </TouchableOpacity>
         </View>
-        {isOpen ? (
-          <View
-            style={{
-              position: 'absolute',
-              backgroundColor: '#f1f1f1',
-              borderRadius: 20,
-              width: 100,
-              height: 100,
-              right: 15,
-              zIndex: 20,
-              marginTop: 50,
-              elevation: Platform.OS === 'android' ? 50 : 0,
-            }}>
-            {user.uid == item.userId ? (
-              <TouchableOpacity
-                style={{backgroundColor: '#f0f0f0', borderRadius: 20}}
-                onPress={() => onDelete(item.id)}>
-                <Text
-                  style={{
-                    color: 'red',
-                    textAlign: 'center',
-                    marginTop: 5,
-                  }}>
-                  Delete
-                </Text>
-              </TouchableOpacity>
-            ) : null}
-          </View>
-        ) : null}
       </View>
       <View style={{alignSelf: 'center', marginTop: 12, zIndex: -1}}>
         {item.postImage !== null ? (
@@ -202,5 +224,38 @@ const styles = StyleSheet.create({
   },
   textInnerContainer: {
     flexDirection: 'row',
+  },
+  panel: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 20,
+    width: '100%',
+  },
+  panelHeader: {
+    alignItems: 'center',
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
+  },
+
+  buttonContainer: {
+    alignItems: 'center',
+  },
+  panelButton: {
+    padding: 13,
+    borderRadius: 10,
+    backgroundColor: 'black',
+    alignItems: 'center',
+    marginVertical: 7,
+    justifyContent: 'center',
+  },
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
