@@ -48,6 +48,20 @@ const AddScreen: React.FC<Types> = () => {
         }
       });
   };
+  
+    const takePhoto = async() => {
+      ImagePicker.openCamera({
+        cropping: true,
+      }).then(image => {
+        const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
+        setImage(imageUri);
+      }).catch(error => {
+        if (error.code === 'E_PICKER_CANCELLED') {
+          return false;
+        }
+      });
+    };
+  
   const submitPost = async () => {
     const imageUrl = await uploadImage();
 
@@ -116,9 +130,14 @@ const AddScreen: React.FC<Types> = () => {
           style={styles.inputStyle}
         />
       </View>
+      <View style={styles.iconContainer}>
       <TouchableOpacity style={styles.photoIcon} onPress={pickImage}>
+        <Ionicons name="add" size={32} color={'gray'} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.photoIcon} onPress={takePhoto}>
         <Ionicons name="md-camera" size={32} color={'gray'} />
       </TouchableOpacity>
+      </View>
       <View style={{flex: 2, alignSelf: 'center', marginTop: '20%'}}>
         {image !== null ? (
           <Image source={{uri: image}} style={{width: 300, height: 300}} />
@@ -154,9 +173,14 @@ const styles = StyleSheet.create({
     width: 48,
     marginRight: 16,
   },
+  iconContainer:{
+    marginHorizontal:'5%',
+    flexDirection:'row',
+    justifyContent:'flex-end'
+  },
   photoIcon: {
     alignItems: 'flex-end',
-    marginHorizontal: 32,
+    margin:'2%'
   },
   inputStyle: {
     color: 'black',
