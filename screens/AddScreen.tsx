@@ -1,6 +1,5 @@
 import {
   SafeAreaView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -17,14 +16,14 @@ import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import {Timestamp, addDoc, collection} from 'firebase/firestore';
 import {AuthContext} from '../context/AuthContext';
 import {UserContext} from '../context/UserContext';
-
+import styles from '../config/Styles';
 interface Types {
   text?: string;
   image?: any | null;
 }
 const AddScreen: React.FC<Types> = () => {
   const {user} = useContext(AuthContext);
-  const {getUser, setUserData, userData} = useContext(UserContext);
+  const {getUser, userData} = useContext(UserContext);
   const [text, setText] = useState('');
   const [image, setImage] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -48,20 +47,22 @@ const AddScreen: React.FC<Types> = () => {
         }
       });
   };
-  
-    const takePhoto = async() => {
-      ImagePicker.openCamera({
-        cropping: true,
-      }).then(image => {
+
+  const takePhoto = async () => {
+    ImagePicker.openCamera({
+      cropping: true,
+    })
+      .then(image => {
         const imageUri = Platform.OS === 'ios' ? image.sourceURL : image.path;
         setImage(imageUri);
-      }).catch(error => {
+      })
+      .catch(error => {
         if (error.code === 'E_PICKER_CANCELLED') {
           return false;
         }
       });
-    };
-  
+  };
+
   const submitPost = async () => {
     const imageUrl = await uploadImage();
 
@@ -76,7 +77,7 @@ const AddScreen: React.FC<Types> = () => {
       .then(() => {
         console.log('post added');
         setText('');
-        setImage(null)
+        setImage(null);
       })
       .catch(e => {
         console.log(e);
@@ -106,13 +107,13 @@ const AddScreen: React.FC<Types> = () => {
     setImage(null);
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView style={styles.flexContainer}>
+      <View style={styles.addHeader}>
         <TouchableOpacity onPress={submitPost}>
-          <Text style={styles.text}>Post</Text>
+          <Text style={styles.addText}>Post</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.inputContainer}>
+      <View style={styles.addInputContainer}>
         <Image
           source={{
             uri: userData
@@ -120,23 +121,23 @@ const AddScreen: React.FC<Types> = () => {
                 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'
               : 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
           }}
-          style={styles.avatar}
+          style={styles.addAvatar}
         />
         <TextInput
           placeholder="Share your photos"
           placeholderTextColor={'lightgray'}
           onChange={() => text}
           onChangeText={setText}
-          style={styles.inputStyle}
+          style={styles.addInputStyle}
         />
       </View>
-      <View style={styles.iconContainer}>
-      <TouchableOpacity style={styles.photoIcon} onPress={pickImage}>
-        <Ionicons name="add" size={32} color={'gray'} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.photoIcon} onPress={takePhoto}>
-        <Ionicons name="md-camera" size={32} color={'gray'} />
-      </TouchableOpacity>
+      <View style={styles.addIconContainer}>
+        <TouchableOpacity style={styles.addPhotoIcon} onPress={pickImage}>
+          <Ionicons name="add" size={32} color={'gray'} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.addPhotoIcon} onPress={takePhoto}>
+          <Ionicons name="md-camera" size={32} color={'gray'} />
+        </TouchableOpacity>
       </View>
       <View style={{flex: 2, alignSelf: 'center', marginTop: '20%'}}>
         {image !== null ? (
@@ -148,41 +149,3 @@ const AddScreen: React.FC<Types> = () => {
 };
 export default AddScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 32,
-    paddingTop: '15%',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    margin: 32,
-  },
-  text: {
-    color: 'black',
-    fontSize: 20,
-    fontFamily: 'GeneralSans-Bold',
-  },
-  avatar: {
-    borderRadius: 24,
-    height: 48,
-    width: 48,
-    marginRight: 16,
-  },
-  iconContainer:{
-    marginHorizontal:'5%',
-    flexDirection:'row',
-    justifyContent:'flex-end'
-  },
-  photoIcon: {
-    alignItems: 'flex-end',
-    margin:'2%'
-  },
-  inputStyle: {
-    color: 'black',
-  },
-});

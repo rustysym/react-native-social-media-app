@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -22,6 +21,7 @@ import {AuthContext} from '../context/AuthContext';
 import {collection, doc, getDoc} from 'firebase/firestore';
 import {firestore} from '../config/FirebaseConfig';
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
+import styles from '../config/Styles';
 
 var width = Dimensions.get('window').width;
 
@@ -37,9 +37,8 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['1%', '50%'], []);
-
-  const handleSheet = (input: any) => {
-    if (!isOpen) {
+  const handleSheet = useCallback((input: any) => {
+    if (isOpen === false) {
       bottomSheetRef.current?.expand();
       setIsOpen(true);
     } else {
@@ -50,7 +49,7 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
       bottomSheetRef.current?.close();
       setIsOpen(false);
     }
-  };
+  },[]);
   const handleSheetChanges = useCallback((index: number) => {
     if (index === 0) {
       setIsOpen(false);
@@ -105,21 +104,21 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
           style={styles.avatarImages}
         />
         <View style={styles.postHeaderTextContainer}>
-          <View style={styles.textInnerContainer}>
-            <Text style={styles.userNameText}>
+          <View style={styles.postTextInnerContainer}>
+            <Text style={styles.postUserNameText}>
               {' '}
               {userData ? userData.fName || 'Test' : 'Test'}{' '}
               {userData ? userData.lName || 'User' : 'User'}
             </Text>
             <Text style={styles.postCreateText}>created a new post</Text>
           </View>
-          <Text style={styles.createTimeText}>
+          <Text style={styles.postCreateTimeText}>
             {moment(item.postTime.toDate()).fromNow()}
           </Text>
         </View>
-        <View style={styles.iconContainer}>
+        <View style={styles.postIconContainer}>
           <TouchableOpacity
-            style={styles.iconStyle}
+            style={styles.postIconStyle}
             onPress={(input: any) => handleSheet(input)}>
             <Entypo name={'dots-three-horizontal'} color={'gray'} size={20} />
           </TouchableOpacity>
@@ -175,87 +174,3 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
 
 export default PostItem;
 
-const styles = StyleSheet.create({
-  postTopContainer: {
-    paddingHorizontal: '5%',
-    flexDirection: 'row',
-  },
-  postHeaderTextContainer: {
-    flexDirection: 'column',
-    paddingTop: 12,
-    paddingLeft: 6,
-  },
-  postCreateText: {
-    color: '#1D1A20',
-    marginLeft: 5,
-  },
-  postText: {
-    marginHorizontal: '8%',
-    marginVertical: '2%',
-  },
-  postBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 18,
-    marginBottom: '10%',
-  },
-  userNameText: {
-    fontWeight: '600',
-    color: '#1D1A20',
-  },
-  avatarImages: {
-    borderRadius: 50,
-    marginHorizontal: 5,
-    height: 68,
-    width: 68,
-  },
-  createTimeText: {
-    paddingTop: 6,
-    color: 'lightgray',
-  },
-  iconContainer: {
-    position: 'absolute',
-    right: 0,
-  },
-  iconStyle: {
-    justifyContent: 'center',
-    height: 50,
-    width: 50,
-  },
-  textInnerContainer: {
-    flexDirection: 'row',
-  },
-  panel: {
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    paddingTop: 20,
-    width: '100%',
-  },
-  panelHeader: {
-    alignItems: 'center',
-  },
-  panelHandle: {
-    width: 40,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#00000040',
-    marginBottom: 10,
-  },
-
-  buttonContainer: {
-    alignItems: 'center',
-  },
-  panelButton: {
-    padding: 13,
-    borderRadius: 10,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    marginVertical: 7,
-    justifyContent: 'center',
-  },
-  panelButtonTitle: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});

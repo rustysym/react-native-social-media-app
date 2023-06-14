@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   TouchableOpacity,
@@ -26,6 +25,7 @@ import {doc, setDoc} from 'firebase/firestore';
 import {firestore, storage} from '../config/FirebaseConfig';
 import {getDownloadURL, ref, uploadBytes} from 'firebase/storage';
 import {UserContext} from '../context/UserContext';
+import styles from '../config/Styles';
 const EditProfileScreen = () => {
   const {user} = useContext(AuthContext);
   const {userData, getUser, setUserData} = useContext(UserContext);
@@ -118,7 +118,7 @@ const EditProfileScreen = () => {
     }
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.flexContainer,{padding:24}]}>
       <BottomSheet
         ref={bottomSheetRef}
         index={0}
@@ -127,7 +127,7 @@ const EditProfileScreen = () => {
         onChange={handleSheetChanges}>
         <BottomSheetView style={styles.panel}>
           <View style={{alignItems: 'center'}}>
-            <Text style={styles.panelTitle}>Upload Photo</Text>
+            <Text style={[styles.panelTitle,{color:'black'}]}>Upload Photo</Text>
             <Text style={styles.panelSubtitle}>
               Choose Your Profile Picture
             </Text>
@@ -253,7 +253,7 @@ const EditProfileScreen = () => {
             style={styles.textInput}
           />
         </View>
-        <View style={styles.buttonContainer}>
+        <View style={styles.panelButtonContainer}>
           <TouchableOpacity
             style={[styles.panelButton, {width: '40%', height: 40}]}
             onPress={handleUpdate}>
@@ -267,93 +267,3 @@ const EditProfileScreen = () => {
 
 export default EditProfileScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-  },
-  panel: {
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    paddingTop: 20,
-    width: '100%',
-  },
-  imageContainer: {
-    paddingTop: '12%',
-    alignItems: 'center',
-  },
-  header: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#333333',
-    shadowOffset: {width: -1, height: -3},
-    shadowRadius: 2,
-    shadowOpacity: 0.4,
-    paddingTop: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  panelHeader: {
-    alignItems: 'center',
-  },
-  panelHandle: {
-    width: 40,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#00000040',
-    marginBottom: 10,
-  },
-  panelTitle: {
-    fontSize: 27,
-    height: 35,
-  },
-  panelSubtitle: {
-    fontSize: 14,
-    color: 'gray',
-    height: 30,
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-  },
-  panelButton: {
-    padding: 13,
-    borderRadius: 10,
-    backgroundColor: 'black',
-    alignItems: 'center',
-    marginVertical: 7,
-    justifyContent: 'center',
-  },
-  panelButtonTitle: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 6,
-    marginBottom: 6,
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
-    alignItems: 'center',
-    borderRadius: 15,
-    paddingLeft: 15,
-  },
-  userTitle: {
-    fontFamily: 'GeneralSans-Medium',
-    color: 'black',
-    fontSize: 20,
-    marginTop: 20,
-  },
-  inputsContainer: {
-    paddingHorizontal: '4%',
-    paddingTop: '10%',
-    zIndex: -4,
-  },
-
-  textInput: {
-    flex: 1,
-    marginTop: 0,
-    paddingLeft: 10,
-    color: '#333333',
-  },
-});

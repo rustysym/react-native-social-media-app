@@ -1,21 +1,19 @@
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   TouchableOpacity,
-  Dimensions,
   ActivityIndicator,
   Alert,
+  Image,
 } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Image} from 'react-native';
 import {PostContext} from '../context/PostContext';
 import PostItem from '../components/PostItem';
 import {UserContext} from '../context/UserContext';
+import styles from '../config/Styles';
 
-var width = Dimensions.get('window').width;
 const HomeScreen = () => {
   const [avatars, setAvatars] = useState<Api[]>([]);
   const apiUrl = 'https://jsonplaceholder.typicode.com/photos';
@@ -114,13 +112,13 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topSection}>
-        <Text style={styles.petText}>Rusty.</Text>
+        <Text style={styles.xlText}>Rusty.</Text>
         <TouchableOpacity>
           <Icon name={'mail-unread-outline'} color={'#1D1A20'} size={30} />
         </TouchableOpacity>
       </View>
       <View>
-        <Text style={styles.latestText}>The Latest</Text>
+        <Text style={styles.xxlText}>The Latest</Text>
       </View>
       <View></View>
       {loading ? (
@@ -145,90 +143,5 @@ const HomeScreen = () => {
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingTop: '4%',
-  },
-  postContainer: {
-    flex: 2,
-    display: 'flex',
-    height: '100%',
-  },
-  topSection: {
-    paddingHorizontal: '8%',
-    paddingTop: '10%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-  },
-  petText: {
-    color: '#1D1A20',
-    fontSize: 24,
-    fontFamily: 'GeneralSans-Bold',
-  },
-  latestText: {
-    paddingHorizontal: '8%',
-    color: '#1D1A20',
-    fontSize: 34,
-    fontFamily: 'GeneralSans-Bold',
-  },
-  avatarList: {
-    marginLeft: '5%',
-    marginTop: '6%',
-    flexDirection: 'row',
-    display: 'flex',
-    paddingBottom: '10%',
-  },
-  avatarImages: {
-    borderRadius: 50,
-    marginHorizontal: 5,
-    height: 68,
-    width: 68,
-  },
-  userNameText: {
-    fontWeight: '600',
-    color: '#1D1A20',
-  },
-  postTopContainer: {
-    paddingHorizontal: '5%',
-    flexDirection: 'row',
-  },
-  postHeaderTextContainer: {
-    flexDirection: 'column',
-    paddingTop: 12,
-    paddingLeft: 6,
-  },
-  postCreateText: {
-    color: '#1D1A20',
-    marginLeft: 5,
-  },
-  postText: {
-    marginHorizontal: '8%',
-    marginVertical: '2%',
-  },
-  postBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 18,
-    marginBottom: '10%',
-  },
-  createTimeText: {
-    paddingTop: 6,
-    color: 'lightgray',
-  },
-  iconContainer: {
-    position: 'absolute',
-    right: 0,
-  },
-  iconStyle: {
-    justifyContent: 'center',
-    height: 50,
-    width: 50,
-  },
-  textInnerContainer: {
-    flexDirection: 'row',
-  },
-});
+
 export default HomeScreen;
