@@ -1,10 +1,4 @@
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from 'react-native';
+import {Text, View, TouchableOpacity, Image, Dimensions} from 'react-native';
 import React, {
   useCallback,
   useContext,
@@ -27,9 +21,10 @@ var width = Dimensions.get('window').width;
 
 interface Types {
   onDelete?: any;
+  onPress?: () => void;
   item?: any;
 }
-const PostItem: React.FC<Types> = ({item, onDelete}) => {
+const PostItem: React.FC<Types> = ({item, onDelete, onPress}) => {
   const {isOpen, setIsOpen} = useContext(PostContext);
   const {user} = useContext(AuthContext);
 
@@ -37,24 +32,19 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['1%', '50%'], []);
-  const handleSheet = useCallback((input: any) => {
-    if (isOpen === false) {
-      bottomSheetRef.current?.expand();
-      setIsOpen(true);
-    } else {
-      bottomSheetRef.current?.close();
-      setIsOpen(false);
-    }
-    if (input) {
-      bottomSheetRef.current?.close();
-      setIsOpen(false);
-    }
-  },[]);
-  const handleSheetChanges = useCallback((index: number) => {
-    if (index === 0) {
-      setIsOpen(false);
-    }
-  }, []);
+  const handleSheet = useCallback(
+    (input: any) => {
+      !isOpen
+        ? bottomSheetRef.current?.expand()
+        : bottomSheetRef.current?.close() && setIsOpen(false);
+      if (input) {
+        bottomSheetRef.current?.expand();
+        setIsOpen(true);
+      }
+    },
+    [isOpen, setIsOpen],
+  );
+  const handleSheetChanges = useCallback((index: number) => {}, []);
 
   const getUser = async () => {
     const refCol = collection(firestore, 'users');
@@ -81,9 +71,9 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
         <BottomSheetView style={styles.panel}>
           {user.uid == item.userId ? (
             <TouchableOpacity
-              style={styles.panelButton}
+              style={[styles.panelButton, {backgroundColor: 'crimson'}]}
               onPress={() => onDelete(item.id)}>
-              <Text style={[styles.panelButtonTitle]}>Delete Post</Text>
+              <Text style={styles.panelButtonTitle}>Delete Post</Text>
             </TouchableOpacity>
           ) : null}
           <TouchableOpacity
@@ -94,22 +84,26 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
         </BottomSheetView>
       </BottomSheet>
       <View style={styles.postTopContainer}>
-        <Image
-          source={{
-            uri: userData
-              ? userData.userImg ||
-                'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'
-              : 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
-          }}
-          style={styles.avatarImages}
-        />
+        <TouchableOpacity onPress={onPress}>
+          <Image
+            source={{
+              uri: userData
+                ? userData?.userImg ||
+                  'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg'
+                : 'https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg',
+            }}
+            style={styles.avatarImages}
+          />
+        </TouchableOpacity>
         <View style={styles.postHeaderTextContainer}>
           <View style={styles.postTextInnerContainer}>
-            <Text style={styles.postUserNameText}>
-              {' '}
-              {userData ? userData.fName || 'Test' : 'Test'}{' '}
-              {userData ? userData.lName || 'User' : 'User'}
-            </Text>
+            <TouchableOpacity onPress={onPress}>
+              <Text style={styles.postUserNameText}>
+                {' '}
+                {userData ? userData.fName || 'Test' : 'Test'}{' '}
+                {userData ? userData.lName || 'User' : 'User'}
+              </Text>
+            </TouchableOpacity>
             <Text style={styles.postCreateText}>created a new post</Text>
           </View>
           <Text style={styles.postCreateTimeText}>
@@ -173,4 +167,3 @@ const PostItem: React.FC<Types> = ({item, onDelete}) => {
 };
 
 export default PostItem;
-
