@@ -1,5 +1,5 @@
 import {useContext, useState} from 'react';
-import { firestore, storage} from '../config/FirebaseConfig';
+import {firestore, storage} from '../config/FirebaseConfig';
 import {PostContext} from './PostContext';
 
 import {AuthContext} from './AuthContext';
@@ -13,7 +13,7 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import {deleteObject,  ref} from 'firebase/storage';
+import {deleteObject, ref} from 'firebase/storage';
 import {Alert} from 'react-native';
 
 interface Types {
@@ -56,39 +56,6 @@ export const PostProvider: React.FC<Types> = ({children}) => {
             }),
           );
           setPosts(list);
-          setLoading(false);
-        });
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const fetchUserPost = async () => {
-    setLoading(true);
-    try {
-      const q = query(
-        collection(firestore, 'posts'),
-        where('userId', '==', user.uid),
-        orderBy('postTime', 'desc'),
-      );
-      onSnapshot(q, snapshot => {
-        const list: any = [];
-        snapshot.forEach(async doc => {
-          const {post, postImage, postTime, userId} = doc.data();
-          await Promise.all(
-            list.push({
-              id: doc.id,
-              userId: userId,
-              userName: user?.displayName,
-              postTime: postTime,
-              post: post,
-              postImage: postImage,
-              liked: false,
-              likes: 0,
-              comments: 0,
-            }),
-          );
-          setUserPosts(list);
           setLoading(false);
         });
       });
@@ -143,7 +110,6 @@ export const PostProvider: React.FC<Types> = ({children}) => {
         isOpen,
         deleted,
         setDeleted,
-        fetchUserPost,
         userPosts,
       }}>
       {children}

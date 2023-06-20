@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useMemo} from 'react';
 import {
   View,
   Text,
@@ -14,7 +14,10 @@ import PostItem from '../components/PostItem';
 import {UserContext} from '../context/UserContext';
 import styles from '../config/Styles';
 
-const HomeScreen = () => {
+interface Types {
+  navigation: any;
+}
+const HomeScreen: React.FC<Types> = ({navigation}) => {
   const [avatars, setAvatars] = useState<Api[]>([]);
   const apiUrl = 'https://jsonplaceholder.typicode.com/photos';
   const {userData} = useContext(UserContext);
@@ -28,7 +31,6 @@ const HomeScreen = () => {
     deleted,
     setDeleted,
   } = useContext(PostContext);
-
   const avatarApi = async () => {
     try {
       const data = await fetch(apiUrl, {
@@ -84,7 +86,14 @@ const HomeScreen = () => {
       {cancelable: false},
     );
   };
-
+  const renderItem = ({item}: {item: Posts}) => (
+    <PostItem
+      item={item}
+      onDelete={handleDelete}
+      onPress={() => navigation.navigate('User', {userId: item.userId})}
+    />
+  );
+  const memoizedValue = useMemo(() => renderItem, [posts]);
   const storyComponent = () => {
     return (
       <FlatList
@@ -93,7 +102,7 @@ const HomeScreen = () => {
         ListHeaderComponent={storyFirstItem}
         style={styles.avatarList}
         scrollEnabled={true}
-        initialNumToRender={7}
+        initialNumToRender={4}
         showsHorizontalScrollIndicator={false}
         keyExtractor={key => key.id}
         renderItem={({item}) => (
@@ -131,13 +140,11 @@ const HomeScreen = () => {
           data={posts}
           keyExtractor={(item, index) => index.toString()}
           style={styles.postContainer}
-          initialNumToRender={6}
+          initialNumToRender={3}
           ListHeaderComponent={storyComponent}
           contentContainerStyle={{paddingBottom: 5}}
           showsVerticalScrollIndicator={false}
-          renderItem={({item}: {item: Posts}) => (
-            <PostItem item={item} onDelete={handleDelete} />
-          )}
+          renderItem={memoizedValue}
         />
       )}
     </View>
