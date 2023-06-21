@@ -4,7 +4,6 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator,
   Alert,
   Image,
 } from 'react-native';
@@ -13,6 +12,7 @@ import {PostContext} from '../context/PostContext';
 import PostItem from '../components/PostItem';
 import {UserContext} from '../context/UserContext';
 import styles from '../config/Styles';
+import PostLoader from '../components/PostLoader';
 
 interface Types {
   navigation: any;
@@ -131,10 +131,7 @@ const HomeScreen: React.FC<Types> = ({navigation}) => {
       </View>
       <View></View>
       {loading ? (
-        <ActivityIndicator
-          color={'black'}
-          style={{flex: 1, alignSelf: 'center'}}
-        />
+        <PostLoader />
       ) : (
         <FlatList
           data={posts}
