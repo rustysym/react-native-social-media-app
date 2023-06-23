@@ -27,7 +27,7 @@ I used `React Native`, `Firebase`, `Typescript`...
 | Storage | Create storage to store images |
 | .env | Create your .env file for the API keys |
 
-`Note:` You need to add index under indexes tab in firestore database
+`Note:` After completing the installation, firebase will warn you about adding indexes via console. You can perform the indexing process by going to the link given in the console.
 
 ## Setup
 - download or clone the repository
