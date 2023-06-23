@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  RefreshControl
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {PostContext} from '../context/PostContext';
@@ -19,6 +20,7 @@ interface Types {
 }
 const HomeScreen: React.FC<Types> = ({navigation}) => {
   const [avatars, setAvatars] = useState<Api[]>([]);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const apiUrl = 'https://jsonplaceholder.typicode.com/photos';
   const {userData} = useContext(UserContext);
   const {
@@ -42,6 +44,12 @@ const HomeScreen: React.FC<Types> = ({navigation}) => {
       console.log(err);
     }
   };
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    fetchPost();
+    setRefreshing(false);
+  }, [refreshing]);
+  
   useEffect(() => {
     fetchPost();
     avatarApi();
@@ -141,6 +149,7 @@ const HomeScreen: React.FC<Types> = ({navigation}) => {
           ListHeaderComponent={storyComponent}
           contentContainerStyle={{paddingBottom: 5}}
           showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
           renderItem={memoizedValue}
         />
       )}
