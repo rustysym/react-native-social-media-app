@@ -13,11 +13,16 @@ import Explore from '../screens/Explore';
 import AddScreen from '../screens/AddScreen';
 import {TabActions, useNavigation} from '@react-navigation/native';
 
-const Tab = createBottomTabNavigator();
-
 export type RootStackParamList = {
+  Explore: undefined;
+  Add: undefined;
+  Feature: undefined;
+  Notifications: undefined;
+  Home: undefined;
   User: {userId: any} | undefined;
 };
+const Tab = createBottomTabNavigator<RootStackParamList>();
+
 export default function Tabs() {
   const {user} = useContext(AuthContext);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -25,6 +30,7 @@ export default function Tabs() {
   return (
     <PostProvider>
       <Tab.Navigator
+        initialRouteName="Home"
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
             let iconName;

@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  memo,
 } from 'react';
 import {PostContext} from '../context/PostContext';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -42,7 +43,7 @@ const PostItem: React.FC<Types> = ({item, onDelete, onPress}) => {
         setIsOpen(true);
       }
     },
-    [isOpen, setIsOpen],
+    [isOpen],
   );
   const handleSheetChanges = useCallback((index: number) => {}, []);
 
@@ -166,4 +167,4 @@ const PostItem: React.FC<Types> = ({item, onDelete, onPress}) => {
   );
 };
 
-export default PostItem;
+export default memo(PostItem);

@@ -7,6 +7,7 @@ import {ActivityIndicator} from 'react-native';
 import {UserProvider} from '../context/UserProvider';
 import {createStackNavigator} from '@react-navigation/stack';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import EditPostScreen from '../screens/EditPostScreen';
 
 const stack = createStackNavigator();
 function Routes() {
@@ -29,6 +30,7 @@ function Routes() {
                   name="EditProfile"
                   component={EditProfileScreen}
                 />
+                <stack.Screen name="EditPost" component={EditPostScreen} options={{headerShown:true,headerTitle:"Edit"}}/>
               </stack.Navigator>
             </>
           ) : (

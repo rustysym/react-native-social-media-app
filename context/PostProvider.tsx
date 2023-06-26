@@ -1,7 +1,6 @@
 import {useContext, useState} from 'react';
 import {firestore, storage} from '../config/FirebaseConfig';
 import {PostContext} from './PostContext';
-
 import {AuthContext} from './AuthContext';
 import {
   collection,
@@ -11,7 +10,6 @@ import {
   onSnapshot,
   orderBy,
   query,
-  where,
 } from 'firebase/firestore';
 import {deleteObject, ref} from 'firebase/storage';
 import {Alert} from 'react-native';
@@ -76,7 +74,6 @@ export const PostProvider: React.FC<Types> = ({children}) => {
       if (postImage !== null) {
         deleteObject(storageRef)
           .then(() => {
-            console.log('image deleted');
             deleteFirestoreData(postId);
           })
           .catch(e => {

@@ -319,6 +319,49 @@ export default StyleSheet.create({
   },
 
   //Add Screen
+  addTakePhoto:{
+    backgroundColor: 'white',
+    borderRadius: 50,
+    width: 80,
+    height: 80,
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: 40,
+    borderColor: 'lightgrey',
+    borderWidth: 6,
+  },
+  addPickImage:{
+    borderRadius: 10,
+    width: 45,
+    height: 45,
+    left: '5%',
+    position: 'absolute',
+    bottom: 40,
+    borderColor: 'lightgrey',
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addFlashIcon:{
+    borderRadius: 10,
+    width: 45,
+    height: 45,
+    right: '5%',
+    position: 'absolute',
+    top: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addCameraChange:{
+    borderRadius: 10,
+    width: 45,
+    height: 45,
+    left: '5%',
+    position: 'absolute',
+    top: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   addHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -327,12 +370,12 @@ export default StyleSheet.create({
   },
   addInputContainer: {
     flexDirection: 'row',
-    margin: 32,
+    margin:'5%'
   },
   addText: {
     color: 'black',
-    fontSize: 20,
-    fontFamily: 'GeneralSans-Bold',
+    fontSize: 18,
+    fontFamily: 'GeneralSans-Medium',
   },
   addAvatar: {
     borderRadius: 24,
@@ -351,8 +394,25 @@ export default StyleSheet.create({
   },
   addInputStyle: {
     color: 'black',
+    marginLeft:'2%',
+    width:'70%',
   },
-
+  addEditButton:{
+    position: 'absolute',
+    alignSelf: 'flex-end',
+    bottom: 50,
+    right: '5%',
+    backgroundColor: 'white',
+    width: 90,
+    height: 45,
+    borderRadius: 20,
+    justifyContent: 'center',
+  },
+  addEditButtonText:{
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'GeneralSans-Bold',
+  },
   //Explore 
   
   exploreSearchInput: {
